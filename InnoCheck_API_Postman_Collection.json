@@ -1,0 +1,465 @@
+{
+  "info": {
+    "_postman_id": "8c8430b3-f027-4a1d-a0e2-9b212f46270e",
+    "name": "InnoCheck API Workspace",
+    "description": "Postman collection to test the InnoCheck and CodeStudio simplified backend endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "General & Health",
+      "item": [
+        {
+          "name": "API Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/health",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Root Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": [""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mock Auth",
+      "item": [
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@innocheck.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/login",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Authenticated User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/me",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Core Suite Features",
+      "item": [
+        {
+          "name": "Validate Idea (Northeast Tourist Safety)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"problem_statement\": \"Tourist Safety Monitoring System using wearable SOS biometrics and LoRa mesh networks\",\n  \"suggestions\": \"Include zero-knowledge traveler passes\",\n  \"language\": \"english\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/validate",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "validate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Idea (Edge Precision Agriculture)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"problem_statement\": \"Precision agriculture leaf disease classification using edge models and soil NPK sensors\",\n  \"suggestions\": \"Offline Marathi USSD alerts\",\n  \"language\": \"marathi\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/validate",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "validate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Code Generator",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tourist emergency dashboard with maps and SOS triggers\",\n  \"framework\": \"react\",\n  \"include_comments\": true\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/generate/code",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "generate", "code"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Plagiarism Checker",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Smart tourist safety tracker using LoRa peer-to-peer mesh broadcasts and ZK Ethereum-compatible blockchain traveler passports\",\n  \"sources\": [\"devpost\", \"github\", \"arxiv\"]\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/plagiarism/check",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "plagiarism", "check"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Literature Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"RAG multi-agent\",\n  \"year_from\": 2020,\n  \"year_to\": 2026,\n  \"source\": \"all\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/literature/search",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "literature", "search"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CodeStudio Unified Sandbox",
+      "item": [
+        {
+          "name": "Get Studio Templates Library",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/templates",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "templates"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Scaffold Studio Component",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Smart Tourist Safety tracker with active SOS panic button\",\n  \"framework\": \"react\",\n  \"typescript\": true\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/component",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "component"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Compile Studio HTML Prototype",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tourist Emergency Outpost Map\",\n  \"template_type\": \"tourist_safety\",\n  \"color_scheme\": \"dark\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/prototype",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "prototype"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Suggest Optimal Tech Stack",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tourist SOS telemetry mesh system\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/suggest-stack",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "suggest-stack"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Explain Compiled Logic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"const [activeSOS, setActiveSOS] = useState(false);\",\n  \"framework\": \"react\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/explain",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "explain"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Conversational Code Refinement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instruction\": \"Translate the interface headings to Marathi रक्षक (Guardian) style\",\n  \"code\": \"<h1>SafeTrek Guardian Live</h1>\",\n  \"framework\": \"react\",\n  \"code_type\": \"prototype\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/chat-refine",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "chat-refine"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Seed Mock Database Tables",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tourist safety telemetry dashboard\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/mock-data",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "mock-data"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Presentation Pitch Deck",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tourist telemetry tracking mesh system\",\n  \"code\": \"/* SafeTrek React Dashboard */\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/pitch-deck",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "pitch-deck"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sentence-BERT Uniqueness Scan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"const [activeSOS, setActiveSOS] = useState(false);\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/plagiarism-check",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "plagiarism-check"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Platform ZIP Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"platform\": \"Standard Website\",\n  \"description\": \"Tourist tracking mesh module\",\n  \"code\": \"<h1>SafeTrek Live Output</h1>\",\n  \"framework\": \"html\",\n  \"code_type\": \"prototype\"\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/codestudio/export-platform",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "8000",
+              "path": ["api", "codestudio", "export-platform"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

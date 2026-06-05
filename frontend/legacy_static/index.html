@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InnoCheck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <h1>InnoCheck</h1>
+          <p class="muted small">Hackathon idea validator</p>
+        </div>
+
+        <button type="button" id="btnNewChat" class="btn-primary sidebar-btn">+ New chat</button>
+
+        <div id="authPanel" class="auth-box">
+          <h3 class="sidebar-heading">Account</h3>
+          <form id="loginForm" class="stack">
+            <input type="email" id="loginEmail" placeholder="Email" required autocomplete="username" />
+            <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password" />
+            <button type="submit" class="btn-secondary">Log in</button>
+          </form>
+          <form id="registerForm" class="stack">
+            <input type="text" id="regName" placeholder="Name" required />
+            <input type="email" id="regEmail" placeholder="Email" required />
+            <input type="password" id="regPassword" placeholder="Password (8+ chars)" required minlength="8" />
+            <button type="submit" class="btn-secondary">Register</button>
+          </form>
+        </div>
+
+        <div id="userBar" class="user-bar hidden">
+          <span id="userEmail" class="small"></span>
+          <button type="button" id="btnLogout" class="btn-secondary">Log out</button>
+        </div>
+
+        <h3 class="sidebar-heading">Chats</h3>
+        <div id="sessionList" class="session-list">
+          <p class="muted small">Log in to see chat history.</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <nav class="tabs" role="tablist">
+          <button type="button" class="tab active" data-tab="validate">Validate idea</button>
+          <button type="button" class="tab" data-tab="prototype">Prototype builder</button>
+        </nav>
+
+        <section id="panel-validate" class="panel">
+          <section class="card">
+            <label for="problem">Problem statement (15–500 characters)</label>
+            <textarea id="problem" rows="5" maxlength="500" placeholder="Describe your hackathon idea..."></textarea>
+            <p class="muted small">Analysis mode</p>
+            <div class="feature-row">
+              <button type="button" class="feature-btn active-feature" data-mode="full">Full analysis</button>
+              <button type="button" class="feature-btn" data-mode="uniqueness">Uniqueness score</button>
+              <button type="button" class="feature-btn" data-mode="gaps">Innovation gaps</button>
+              <button type="button" class="feature-btn" data-mode="similar">Similar works</button>
+              <button type="button" class="feature-btn" data-mode="suggestion">Suggestion + tech</button>
+              <button type="button" class="feature-btn" data-mode="literature">Literature review</button>
+            </div>
+            <div class="chips">
+              <button type="button" class="chip">AI crop disease detection with Marathi support</button>
+              <button type="button" class="chip">Smart waste segregation with IoT and analytics</button>
+              <button type="button" class="chip">Offline classroom tutor for rural schools</button>
+            </div>
+            <button type="button" id="analyzeBtn" class="btn-primary">Run analysis</button>
+          </section>
+
+          <section id="loading" class="card hidden">
+            <div class="loader"></div>
+            <p>Running analysis…</p>
+          </section>
+
+          <div id="results" class="hidden"></div>
+        </section>
+
+        <section id="panel-prototype" class="panel hidden">
+          <section class="card">
+            <h2 class="section-title">Natural language → prototype</h2>
+            <p class="muted small">
+              Set <code>GEMINI_API_KEY</code> in <code>backend/.env</code> for AI-generated code. Sandpack preview needs
+              this page served over HTTP (e.g. <code>python -m http.server 8080</code> in this folder).
+            </p>
+            <div class="row">
+              <div>
+                <label for="protoFramework">Framework</label>
+                <select id="protoFramework">
+                  <option value="html">HTML + CSS + JS</option>
+                  <option value="react">React (Sandpack)</option>
+                  <option value="vue">Vue 3 (Sandpack)</option>
+                  <option value="flask">Flask</option>
+                  <option value="fastapi">FastAPI</option>
+                </select>
+              </div>
+              <div>
+                <label for="protoTemplate">Domain template</label>
+                <select id="protoTemplate">
+                  <option value="generic">Loading…</option>
+                </select>
+              </div>
+            </div>
+            <label class="chk"><input type="checkbox" id="protoAutoTpl" checked /> Auto-pick template from description</label>
+            <label for="protoDesc">What should the prototype do?</label>
+            <textarea id="protoDesc" rows="4" placeholder="e.g. Farmer dashboard with Marathi labels"></textarea>
+            <div class="row-actions">
+              <button type="button" id="protoGenerateBtn" class="btn-primary">Generate prototype</button>
+              <button type="button" id="protoCopyProblemBtn" class="btn-secondary">Copy from Validate tab</button>
+            </div>
+          </section>
+
+          <section id="protoLoading" class="card hidden">
+            <div class="loader"></div>
+            <p>Generating code…</p>
+          </section>
+
+          <section id="protoOutput" class="hidden">
+            <div class="card">
+              <div class="row-actions">
+                <h3>Live preview</h3>
+                <span id="protoPreviewHint" class="muted small"></span>
+              </div>
+              <div class="preview-wrap">
+                <iframe id="protoIframe" title="Preview" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                <p id="protoNoPreview" class="muted hidden">Use the code panel for server-side frameworks.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="row-actions">
+                <h3>Generated code</h3>
+                <div class="btn-group">
+                  <button type="button" id="protoDownloadBtn" class="btn-secondary">Download</button>
+                  <button type="button" id="protoCopyBtn" class="btn-secondary">Copy</button>
+                  <button type="button" id="protoExplainBtn" class="btn-secondary">Explain</button>
+                </div>
+              </div>
+              <pre id="protoCode" class="code-block"></pre>
+              <div id="protoExplain" class="explain-box hidden"></div>
+            </div>
+            <div class="card">
+              <label for="protoRefine">Refine</label>
+              <div class="row refine-row">
+                <input type="text" id="protoRefine" placeholder="e.g. Make the button blue" />
+                <button type="button" id="protoRefineBtn" class="btn-primary">Apply</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Saved prototypes</h3>
+              <ul id="protoHistoryList" class="history-list">
+                <li class="muted">Log in to see saved prototypes.</li>
+              </ul>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

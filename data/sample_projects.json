@@ -1,0 +1,65 @@
+{
+  "items": [
+    {
+      "title": "Deep Learning for Crop Disease Detection",
+      "summary": "CNN-based crop disease detection using leaf images in controlled environments.",
+      "domain": "AgriTech",
+      "year": 2024,
+      "source": "IEEE Access",
+      "url": "https://arxiv.org/abs/2401.12345",
+      "known_gap": "Limited real-field dataset and no regional language UX.",
+      "tech_stack": ["PyTorch", "CNN", "Flask"]
+    },
+    {
+      "title": "Smart Parking Slot Detection",
+      "summary": "Computer vision system that detects parking slot occupancy from CCTV feeds.",
+      "domain": "Smart City",
+      "year": 2023,
+      "source": "Devpost",
+      "url": "https://devpost.com/software/smart-parking",
+      "known_gap": "Cloud-only deployment and weak edge optimization.",
+      "tech_stack": ["OpenCV", "YOLO", "React"]
+    },
+    {
+      "title": "Voice Assistant for Farmers",
+      "summary": "Voice-based agri helper with weather and fertilizer recommendations.",
+      "domain": "AgriTech",
+      "year": 2024,
+      "source": "arXiv",
+      "url": "https://arxiv.org/abs/2402.56789",
+      "known_gap": "English dominant and no offline inference path.",
+      "tech_stack": ["ASR", "NLP", "FastAPI"]
+    },
+    {
+      "title": "Rural Telemedicine Triage Bot",
+      "summary": "Chatbot for preliminary symptom triage and referral guidance.",
+      "domain": "HealthTech",
+      "year": 2025,
+      "source": "Semantic Scholar",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36789123/",
+      "known_gap": "No multilingual medical explainability layer.",
+      "tech_stack": ["LLM", "RAG", "PostgreSQL"]
+    },
+    {
+      "title": "Offline Classroom Learning Assistant",
+      "summary": "AI tutor for low-connectivity classrooms using on-device models.",
+      "domain": "EdTech",
+      "year": 2025,
+      "source": "GitHub",
+      "url": "https://github.com/edu-assistant/offline",
+      "known_gap": "Limited analytics and teacher dashboard insights.",
+      "tech_stack": ["TensorFlow Lite", "Flutter", "SQLite"]
+    },
+    {
+      "title": "Waste Segregation Using Edge Vision",
+      "summary": "Edge AI for classifying dry/wet waste at source.",
+      "domain": "Sustainability",
+      "year": 2024,
+      "source": "Devpost",
+      "url": "https://devpost.com/software/waste-segregator",
+      "known_gap": "Small dataset and low precision on mixed waste streams.",
+      "tech_stack": ["Edge TPU", "MobileNet", "IoT"]
+    }
+  ]
+}
+

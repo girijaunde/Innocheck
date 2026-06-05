@@ -1,0 +1,40 @@
+{
+  "templates": [
+    {
+      "id": "generic",
+      "label": "Generic MVP",
+      "domain": "general",
+      "description": "Simple landing + CTA + form demo"
+    },
+    {
+      "id": "agritech",
+      "label": "AgriTech",
+      "domain": "agritech",
+      "description": "Crop advisory, weather hints, regional language labels"
+    },
+    {
+      "id": "healthtech",
+      "label": "HealthTech",
+      "domain": "healthtech",
+      "description": "Symptom triage UI, disclaimers, appointment flow"
+    },
+    {
+      "id": "fintech",
+      "label": "FinTech",
+      "domain": "fintech",
+      "description": "Dashboard, transactions list, basic KYC placeholder"
+    },
+    {
+      "id": "edtech",
+      "label": "EdTech",
+      "domain": "edtech",
+      "description": "Lesson list, quiz, progress bar"
+    },
+    {
+      "id": "sustainability",
+      "label": "Sustainability",
+      "domain": "sustainability",
+      "description": "Waste/carbon tracking, simple charts placeholder"
+    }
+  ]
+}

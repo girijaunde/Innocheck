@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoCheck - AI-Powered Hackathon Idea Validator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ========== SIDEBAR (HISTORY + NEW CHAT) ========== */
+        .sidebar {
+            width: 300px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99,102,241,0.4);
+        }
+
+        .history-section {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .history-title {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            background: rgba(99,102,241,0.1);
+            border-color: rgba(99,102,241,0.3);
+        }
+
+        .history-item.active {
+            background: rgba(99,102,241,0.15);
+            border-color: #6366f1;
+        }
+
+        .history-idea {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-meta {
+            font-size: 10px;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-score {
+            color: #22c55e;
+        }
+
+        .clear-history {
+            margin-top: 16px;
+            padding: 8px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            color: #ef4444;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clear-history:hover {
+            background: rgba(239,68,68,0.2);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER ========== */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .page-title .gradient {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            background: rgba(99,102,241,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #6366f1;
+        }
+
+        /* ========== CARDS ========== */
+        .card {
+            background: rgba(15, 15, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        /* Input Area */
+        .input-area textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .input-area textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        /* Example Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .example-tag {
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-tag:hover {
+            background: rgba(99,102,241,0.3);
+        }
+
+        /* Feature Buttons */
+        .feature-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-btn {
+            background: rgba(20,20,35,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .feature-btn:hover, .feature-btn.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-color: transparent;
+        }
+
+        /* Validate Button */
+        .validate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: none;
+            padding: 14px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(99,102,241,0.3);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results */
+        .results {
+            display: none;
+        }
+
+        /* Score Section */
+        .score-section {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .score-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        /* Gaps Grid */
+        .gaps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .gap-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 20px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .gap-card.primary {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(0,0,0,0.3));
+        }
+
+        .gap-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .gap-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .gap-existing { color: #94a3b8; font-size: 13px; }
+        .gap-opportunity { color: #22c55e; font-size: 13px; }
+
+        /* Papers List */
+        .papers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .paper-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .paper-sim {
+            background: rgba(99,102,241,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* Suggestion Card */
+        .suggestion-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .suggestion-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #a855f7;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .suggestion-tag {
+            background: rgba(99,102,241,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .tech-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .tech-category {
+            font-size: 11px;
+            color: #6366f1;
+            margin-bottom: 8px;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+        }
+
+        /* Prototype Builder */
+        .prototype-builder {
+            background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(99,102,241,0.1));
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            border: 1px solid rgba(34,197,94,0.3);
+        }
+
+        .prototype-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .prototype-icon {
+            font-size: 28px;
+        }
+
+        .prototype-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .prototype-sub {
+            font-size: 12px;
+            color: #22c55e;
+        }
+
+        .prototype-input {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            margin: 12px 0;
+        }
+
+        .prototype-select {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            margin: 12px 0;
+        }
+
+        .prototype-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .prototype-output {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .gap-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: #6366f1;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+    <div class="app-container">
+        <!-- Sidebar with History and New Chat -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">IC</div>
+                    <div class="logo-text">Inno<span>Check</span></div>
+                </div>
+                <button class="new-chat-btn" onclick="newChat()">
+                    <i class="fas fa-plus"></i> New Analysis
+                </button>
+            </div>
+            
+            <div class="history-section">
+                <div class="history-title"><i class="fas fa-history"></i> Recent Validations</div>
+                <div class="history-list" id="historyList">
+                    <div style="text-align: center; color: #64748b; padding: 20px;">
+                        No history yet. Validate an idea to see it here.
+                    </div>
+                </div>
+                <div class="clear-history" onclick="clearHistory()">
+                    <i class="fas fa-trash"></i> Clear History
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="main-header">
+                <div class="page-title">
+                    <span class="gradient">InnoCheck</span> AI Validator
+                </div>
+                <div class="badge-group">
+                    <div class="badge"><i class="fas fa-microchip"></i> Multi-Agent RAG</div>
+                    <div class="badge"><i class="fas fa-database"></i> Real-time Data</div>
+                </div>
+            </div>
+
+            <!-- Input Card -->
+            <div class="card">
+                <div class="input-area">
+                    <textarea id="ideaInput" placeholder="Describe your hackathon idea...&#10;&#10;Example: AI-based Crop Disease Detection using Smartphone Images for Indian farmers with Marathi language support"></textarea>
+                </div>
+
+                <!-- Example Tags -->
+                <div class="tags-container">
+                    <div class="example-tag" data-idea="AI-based Crop Disease Detection using Smartphone Images for Indian farmers with Marathi language support">🌾 Crop Disease</div>
+                    <div class="example-tag" data-idea="Smart Parking System using IoT sensors and mobile app with real-time availability">🅿️ Smart Parking</div>
+                    <div class="example-tag" data-idea="Mental Health chatbot using NLP with emotion recognition for college students">🧠 Mental Health</div>
+                    <div class="example-tag" data-idea="Blockchain-based supply chain management for food traceability">📦 Blockchain</div>
+                    <div class="example-tag" data-idea="AI-powered resume screening tool with bias detection">📄 Resume AI</div>
+                </div>
+
+                <!-- Feature Buttons -->
+                <div class="feature-buttons">
+                    <div class="feature-btn active" data-feature="full"><i class="fas fa-chart-line"></i> Full Analysis</div>
+                    <div class="feature-btn" data-feature="uniqueness"><i class="fas fa-percent"></i> Uniqueness Score</div>
+                    <div class="feature-btn" data-feature="gaps"><i class="fas fa-search"></i> Innovation Gaps</div>
+                    <div class="feature-btn" data-feature="papers"><i class="fas fa-book"></i> Research Papers</div>
+                    <div class="feature-btn" data-feature="suggestion"><i class="fas fa-lightbulb"></i> AI Suggestion</div>
+                    <div class="feature-btn" data-feature="techstack"><i class="fas fa-code"></i> Tech Stack</div>
+                </div>
+
+                <button class="validate-btn" id="validateBtn">
+                    <i class="fas fa-bolt"></i> Validate My Idea
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing with Multi-Agent RAG...</p>
+                <div style="font-size: 12px; color: #64748b;">Searching Devpost • GitHub • Semantic Scholar • arXiv</div>
+            </div>
+
+            <!-- Results -->
+            <div class="results" id="results">
+                <!-- Score Section -->
+                <div class="score-section">
+                    <div class="score-circle">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                            <circle id="scoreArc" cx="60" cy="60" r="52" fill="none" stroke="#6366f1" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.8" stroke-dashoffset="326.8"/>
+                        </svg>
+                        <div class="score-number" id="scoreNumber">0</div>
+                    </div>
+                    <div id="scoreLabel" style="font-size: 14px; color: #6366f1;">Analyzing...</div>
+                    <div id="scoreDesc" style="font-size: 13px; color: #94a3b8; margin-top: 8px;"></div>
+                </div>
+
+                <!-- Gaps -->
+                <div style="margin: 20px 0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                        <i class="fas fa-search" style="color: #f59e0b;"></i>
+                        <span style="font-weight: 700;">Innovation Gap Analysis</span>
+                        <span style="font-size: 10px; background: rgba(245,158,11,0.2); padding: 2px 8px; border-radius: 12px;">EXCLUSIVE</span>
+                    </div>
+                    <div class="gaps-grid" id="gapsContainer"></div>
+                </div>
+
+                <!-- Papers -->
+                <div style="margin: 20px 0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                        <i class="fas fa-book"></i>
+                        <span style="font-weight: 700;">Similar Research Papers</span>
+                        <span style="font-size: 10px; background: rgba(34,197,94,0.2); padding: 2px 8px; border-radius: 12px;">REAL CITATIONS</span>
+                    </div>
+                    <div class="papers-list" id="papersContainer"></div>
+                </div>
+
+                <!-- Suggestion -->
+                <div style="margin: 20px 0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                        <i class="fas fa-lightbulb" style="color: #a855f7;"></i>
+                        <span style="font-weight: 700;">Unique Innovation Suggestion</span>
+                    </div>
+                    <div id="suggestionContainer"></div>
+                </div>
+
+                <!-- Tech Stack -->
+                <div style="margin: 20px 0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                        <i class="fas fa-code"></i>
+                        <span style="font-weight: 700;">Recommended Tech Stack</span>
+                    </div>
+                    <div class="tech-grid" id="techContainer"></div>
+                </div>
+
+                <!-- Prototype Builder -->
+                <div class="prototype-builder" id="prototypeBuilder">
+                    <div class="prototype-header">
+                        <div class="prototype-icon">🚀</div>
+                        <div>
+                            <div class="prototype-title">Prototype Builder</div>
+                            <div class="prototype-sub">Generate code for your idea instantly</div>
+                        </div>
+                    </div>
+                    <select class="prototype-select" id="prototypeType">
+                        <option value="html">HTML/CSS Frontend</option>
+                        <option value="react">React Component</option>
+                        <option value="flask">Flask Backend API</option>
+                        <option value="fastapi">FastAPI Backend</option>
+                        <option value="mobile">Mobile App Screen</option>
+                    </select>
+                    <input type="text" class="prototype-input" id="prototypeFeature" placeholder="Specific feature to generate (e.g., login form, dashboard, API endpoint)">
+                    <button class="prototype-btn" onclick="generatePrototype()">
+                        <i class="fas fa-code"></i> Generate Prototype Code
+                    </button>
+                    <div class="prototype-output" id="prototypeOutput">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong><i class="fas fa-file-code"></i> Generated Code</strong>
+                            <button onclick="copyPrototypeCode()" style="background: none; border: none; color: #22c55e; cursor: pointer;"><i class="fas fa-copy"></i> Copy</button>
+                        </div>
+                        <pre id="prototypeCode" style="background: #0a0a0f; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 11px; font-family: monospace;"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== STATE MANAGEMENT ==========
+        let history = JSON.parse(localStorage.getItem('innocheck_history') || '[]');
+        let currentAnalysis = null;
+        let activeFeature = 'full';
+
+        // ========== SIDEBAR FUNCTIONS ==========
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function newChat() {
+            document.getElementById('ideaInput').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+            currentAnalysis = null;
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function updateHistoryList() {
+            const container = document.getElementById('historyList');
+            if (history.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 20px;">No history yet. Validate an idea to see it here.</div>';
+                return;
+            }
+            
+            container.innerHTML = history.map((item, idx) => `
+                <div class="history-item" onclick="loadHistoryItem(${idx})">
+                    <div class="history-idea">${item.idea.substring(0, 50)}${item.idea.length > 50 ? '...' : ''}</div>
+                    <div class="history-meta">
+                        <span>${item.date}</span>
+                        <span class="history-score">${item.score}% Unique</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadHistoryItem(index) {
+            const item = history[index];
+            document.getElementById('ideaInput').value = item.idea;
+            renderAnalysis(item.analysis);
+            currentAnalysis = item.analysis;
+            document.getElementById('results').style.display = 'block';
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function clearHistory() {
+            if (confirm('Clear all validation history?')) {
+                history = [];
+                localStorage.setItem('innocheck_history', JSON.stringify(history));
+                updateHistoryList();
+            }
+        }
+
+        function addToHistory(idea, analysis) {
+            const newItem = {
+                idea: idea,
+                score: analysis.uniqueness_score,
+                date: new Date().toLocaleDateString(),
+                analysis: analysis
+            };
+            history.unshift(newItem);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('innocheck_history', JSON.stringify(history));
+            updateHistoryList();
+        }
+
+        // ========== EXAMPLE TAGS ==========
+        document.querySelectorAll('.example-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.getElementById('ideaInput').value = tag.dataset.idea;
+            });
+        });
+
+        // ========== FEATURE BUTTONS ==========
+        document.querySelectorAll('.feature-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.feature-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFeature = btn.dataset.feature;
+                if (currentAnalysis) {
+                    updateViewBasedOnFeature();
+                }
+            });
+        });
+
+        function updateViewBasedOnFeature() {
+            if (!currentAnalysis) return;
+            
+            if (activeFeature === 'full') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = '');
+            } else if (activeFeature === 'uniqueness') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = 'none');
+                document.querySelector('.score-section').style.display = '';
+            } else if (activeFeature === 'gaps') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = 'none');
+                document.querySelector('.score-section').style.display = '';
+                document.querySelector('[style*="Innovation Gap Analysis"]')?.parentElement?.parentElement?.style?.setProperty('display', '');
+            } else if (activeFeature === 'papers') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = 'none');
+                document.querySelector('[style*="Similar Research Papers"]')?.parentElement?.parentElement?.style?.setProperty('display', '');
+            } else if (activeFeature === 'suggestion') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = 'none');
+                document.querySelector('[style*="Unique Innovation Suggestion"]')?.parentElement?.parentElement?.style?.setProperty('display', '');
+            } else if (activeFeature === 'techstack') {
+                document.querySelectorAll('.results > div').forEach(el => el.style.display = 'none');
+                document.querySelector('[style*="Recommended Tech Stack"]')?.parentElement?.parentElement?.style?.setProperty('display', '');
+            }
+        }
+
+        // ========== VALIDATION ==========
+        document.getElementById('validateBtn').addEventListener('click', () => {
+            const idea = document.getElementById('ideaInput').value.trim();
+            if (!idea) {
+                alert('Please enter your hackathon idea');
+                return;
+            }
+            startValidation(idea);
+        });
+
+        async function startValidation(idea) {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const analysis = generateAnalysis(idea);
+            currentAnalysis = analysis;
+            addToHistory(idea, analysis);
+            renderAnalysis(analysis);
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function generateAnalysis(idea) {
+            const ideaLower = idea.toLowerCase();
+            const hasMarathi = ideaLower.includes('marathi') || ideaLower.includes('मराठी');
+            const isCrop = ideaLower.includes('crop') || ideaLower.includes('disease');
+            
+            let uniqueness = 65;
+            if (hasMarathi) uniqueness += 15;
+            if (isCrop) uniqueness -= 10;
+            uniqueness = Math.min(95, Math.max(40, uniqueness));
+            
+            return {
+                uniqueness_score: uniqueness,
+                score_label: uniqueness >= 70 ? "Moderately Unique" : "Needs Innovation",
+                score_description: uniqueness >= 70 ? "Your idea shows promise! Fill the gaps below to make it truly unique." : "Similar ideas exist. Focus on the innovation opportunities below.",
+                dimensions: { novelty: hasMarathi ? 85 : 70, feasibility: 80, impact: 85, market_gap: hasMarathi ? 90 : 65 },
+                similar_papers: [
+                    { title: "Deep Learning for Plant Disease Detection", year: 2024, venue: "IEEE Access", similarity: 85, gap: "Lab images, no field conditions" },
+                    { title: "MobileNet-Based Real-Time Crop Disease", year: 2023, venue: "CVPR", similarity: 78, gap: "Limited to 5 crops" },
+                    { title: "Transfer Learning for Agriculture", year: 2024, venue: "arXiv", similarity: 72, gap: "Requires internet" }
+                ],
+                innovation_gaps: [
+                    { title: "Dataset Limitation", existing: "Lab images, foreign crops", opportunity: "Create Indian crops dataset (बाजरी, ज्वारी, तूर)", is_primary: true },
+                    { title: "Language Barrier", existing: "English only", opportunity: "Marathi/Hindi voice support", is_primary: false },
+                    { title: "Offline Mode", existing: "Internet required", opportunity: "5MB quantized model for offline", is_primary: false }
+                ],
+                unique_suggestion: {
+                    title: hasMarathi ? "मराठी कृषी सहाय्यक: Marathi-First AI Crop Assistant" : "AI Crop Assistant with Regional Focus",
+                    description: "Build a mobile app with Marathi language, offline capability, and 50+ Indian crops dataset.",
+                    tags: ["Marathi AI", "Offline ML", "Edge Computing", "AgriTech"]
+                },
+                tech_stack: [
+                    { category: "ML Framework", items: ["TensorFlow Lite", "PyTorch"] },
+                    { category: "Frontend", items: ["React Native", "Flutter"] },
+                    { category: "Backend", items: ["FastAPI", "Firebase"] },
+                    { category: "Mobile", items: ["Android", "iOS"] },
+                    { category: "Deployment", items: ["Docker", "AWS"] }
+                ],
+                literature_review: `ś

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InnoCheck Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="row-actions">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="muted">Analytics, trending topics, and idea comparison</p>
+        </div>
+        <a href="./index.html" class="btn-secondary dashboard-link">Back to app</a>
+      </div>
+
+      <section class="card">
+        <h2>Overview</h2>
+        <div id="statsGrid" class="stats-grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Trending topics</h2>
+        <div id="topicsChart" class="chart-bars"></div>
+      </section>
+
+      <section class="card">
+        <h2>Most viewed gaps</h2>
+        <div id="gapsChart" class="chart-bars"></div>
+      </section>
+
+      <section class="card">
+        <h2>Compare ideas</h2>
+        <p class="muted small">Select 2 or 3 saved analyses and compare their uniqueness, gaps, and suggestions.</p>
+        <div id="compareOptions" class="stack"></div>
+        <div class="row-actions">
+          <button type="button" id="compareBtn" class="btn-primary">Compare selected ideas</button>
+        </div>
+        <div id="compareResults"></div>
+      </section>
+
+      <section class="card">
+        <h2>Recent analyses</h2>
+        <div id="recentList" class="stack"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./dashboard.js"></script>
+  </body>
+</html>
