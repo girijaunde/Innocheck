@@ -78,9 +78,10 @@ DATABASE_URL = _get("DATABASE_URL", "sqlite:///./innocheck.db")
 # CORS
 CORS_ORIGINS = _get(
     "CORS_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,http://127.0.0.1:5173,http://127.0.0.1:8080",
+    "http://localhost:3000,http://127.0.0.1:3000,http://127.0.0.1:5173,http://127.0.0.1:8080,https://innocheck-frontend.onrender.com",
 ).split(",")
 CORS_ORIGINS = [origin.strip() for origin in CORS_ORIGINS]
+
 
 # Startup Validation
 logger.info(f"Environment: {ENVIRONMENT} | Debug: {DEBUG_MODE} | AI: {AI_PROVIDER.upper()}")
